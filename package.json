@@ -1,0 +1,49 @@
+{
+  "name": "agentcontract",
+  "version": "0.1.0",
+  "description": "Executable spec for AI agent behavior contracts — define expected behavior in YAML and verify compliance.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "bin": {
+    "agentcontract": "./dist/cli/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src/",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wharfe/agentcontract.git"
+  },
+  "homepage": "https://github.com/wharfe/agentcontract",
+  "keywords": [
+    "ai",
+    "agent",
+    "contract",
+    "testing",
+    "verification",
+    "llm",
+    "governance"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}
