@@ -16,3 +16,6 @@ export type {
 } from "./core/index.js";
 
 export { evaluateAssertion, validateContract } from "./core/index.js";
+export type { ScopeJudgeContext } from "./core/index.js";
+export { runContract, runScenario } from "./core/index.js";
+export { AnthropicAdapter } from "./adapters/index.js";

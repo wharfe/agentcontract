@@ -123,23 +123,32 @@ describe("json_schema", () => {
   });
 });
 
-// --- scope_compliant (mock) ---
+// --- scope_compliant ---
 
-describe("scope_compliant (mock)", () => {
+describe("scope_compliant", () => {
   const scope: ActionScope = {
     domain: "api.example.com",
     operations: ["read"],
   };
 
-  it("passes with mock implementation", async () => {
+  it("fails without judge context", async () => {
     const result = await evaluateAssertion(
       "I will read the data",
       { type: "scope_compliant" },
       scope,
     );
-    expect(result.passed).toBe(true);
+    expect(result.passed).toBe(false);
     expect(result.type).toBe("scope_compliant");
-    expect(result.message).toContain("mock");
+    expect(result.message).toContain("No judge context");
+  });
+
+  it("fails without scope", async () => {
+    const result = await evaluateAssertion(
+      "I will read the data",
+      { type: "scope_compliant" },
+    );
+    expect(result.passed).toBe(false);
+    expect(result.message).toContain("No scope defined");
   });
 });
 
