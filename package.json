@@ -11,7 +11,7 @@
     }
   },
   "bin": {
-    "agentcontract": "./dist/cli/index.js"
+    "agentcontract": "dist/cli/index.js"
   },
   "files": [
     "dist",
