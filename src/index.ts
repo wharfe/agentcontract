@@ -14,3 +14,5 @@ export type {
   CompleteParams,
   CompleteResult,
 } from "./core/index.js";
+
+export { evaluateAssertion, validateContract } from "./core/index.js";

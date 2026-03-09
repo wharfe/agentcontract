@@ -14,3 +14,5 @@ export type {
   CompleteParams,
   CompleteResult,
 } from "./types.js";
+
+export { evaluateAssertion, validateContract } from "./assertions.js";
