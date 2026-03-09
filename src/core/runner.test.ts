@@ -283,6 +283,40 @@ describe("scope_compliant with mock adapter", () => {
     expect(result.scenarios[0].assertions[0].message).toContain("compliant");
   });
 
+  it("handles judge response wrapped in code fences", async () => {
+    const adapter: LLMAdapter = {
+      provider: "mock",
+      async complete(params: CompleteParams): Promise<CompleteResult> {
+        if (params.system.includes("compliance judge")) {
+          return {
+            output: '```json\n{"compliant": true, "reason": "Agent stayed within scope"}\n```',
+            usage: { input_tokens: 10, output_tokens: 20 },
+          };
+        }
+        return {
+          output: "I will read the data for you.",
+          usage: { input_tokens: 10, output_tokens: 20 },
+        };
+      },
+    };
+
+    const contract = makeContract({
+      scope: { domain: "api.example.com", operations: ["read"] },
+      scenarios: [
+        {
+          name: "code fence judge",
+          input: "Read the data",
+          assert: [{ type: "scope_compliant" }],
+        },
+      ],
+    });
+
+    const result = await runContract(contract, adapter);
+    expect(result.passed).toBe(true);
+    expect(result.scenarios[0].assertions[0].passed).toBe(true);
+    expect(result.scenarios[0].assertions[0].message).toContain("compliant");
+  });
+
   it("fails when judge returns non-compliant", async () => {
     const adapter: LLMAdapter = {
       provider: "mock",

@@ -250,7 +250,8 @@ ${scopeDescription}`;
       max_tokens: judgeContext.maxTokens,
     });
 
-    const judgment = JSON.parse(result.output) as { compliant: boolean; reason: string };
+    const jsonText = extractJson(result.output);
+    const judgment = JSON.parse(jsonText) as { compliant: boolean; reason: string };
 
     const scopeSummary = `${scope.operations.join(", ")} on ${scope.domain}`;
     return {
@@ -268,4 +269,14 @@ ${scopeDescription}`;
       message: `Scope compliance judge failed: ${msg}`,
     };
   }
+}
+
+// Strip code fences from LLM judge output to extract raw JSON.
+// Only used internally for scope_compliant judge responses.
+function extractJson(text: string): string {
+  const fenceMatch = text.match(/```(?:json)?\s*\n?([\s\S]*?)\n?\s*```/);
+  if (fenceMatch) {
+    return fenceMatch[1].trim();
+  }
+  return text.trim();
 }

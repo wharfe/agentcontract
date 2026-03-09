@@ -1,0 +1,19 @@
+# E2E scenario 3: LLM call failure produces correct ScenarioResult.
+# Uses a nonexistent model ID to force an API error.
+
+contract: e2e-error
+version: "0.1"
+
+model:
+  provider: anthropic
+  id: nonexistent-model-id-that-will-fail
+  system: "You are a test assistant."
+  temperature: 0
+  max_tokens: 256
+
+scenarios:
+  - name: "LLM call failure returns correct structure"
+    input: "Hello"
+    assert:
+      - type: contains_pattern
+        pattern: "."
