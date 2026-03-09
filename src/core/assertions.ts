@@ -29,8 +29,61 @@ or
 {"compliant": false, "reason": "brief explanation"}`;
 
 /**
+ * Validate the shape of a parsed YAML object as a Contract.
+ * Throws a descriptive error if the structure is invalid.
+ */
+export function validateContractShape(value: unknown): asserts value is Contract {
+  if (typeof value !== "object" || value === null) {
+    throw new Error("Contract validation error: contract file must be a YAML mapping");
+  }
+  const obj = value as Record<string, unknown>;
+
+  if (typeof obj.contract !== "string" || obj.contract === "") {
+    throw new Error("Contract validation error: 'contract' field must be a non-empty string");
+  }
+  if (typeof obj.version !== "string" || obj.version === "") {
+    throw new Error("Contract validation error: 'version' field must be a non-empty string");
+  }
+
+  // model validation
+  if (typeof obj.model !== "object" || obj.model === null) {
+    throw new Error("Contract validation error: 'model' field must be an object");
+  }
+  const model = obj.model as Record<string, unknown>;
+  if (model.provider !== "anthropic") {
+    throw new Error("Contract validation error: model.provider must be 'anthropic'");
+  }
+  if (typeof model.id !== "string" || model.id === "") {
+    throw new Error("Contract validation error: model.id must be a non-empty string");
+  }
+  if (typeof model.system !== "string") {
+    throw new Error("Contract validation error: model.system must be a string");
+  }
+
+  // scenarios validation
+  if (!Array.isArray(obj.scenarios)) {
+    throw new Error("Contract validation error: 'scenarios' must be an array");
+  }
+  for (let i = 0; i < obj.scenarios.length; i++) {
+    const s = obj.scenarios[i] as Record<string, unknown>;
+    if (typeof s !== "object" || s === null) {
+      throw new Error(`Contract validation error: scenario[${i}] must be an object`);
+    }
+    if (typeof s.name !== "string" || s.name === "") {
+      throw new Error(`Contract validation error: scenario[${i}].name must be a non-empty string`);
+    }
+    if (typeof s.input !== "string") {
+      throw new Error(`Contract validation error: scenario "${s.name ?? i}".input must be a string`);
+    }
+    if (!Array.isArray(s.assert)) {
+      throw new Error(`Contract validation error: scenario "${s.name}".assert must be an array`);
+    }
+  }
+}
+
+/**
  * Validate all assertions in a contract before execution.
- * Throws on invalid regex patterns or missing scope for scope_compliant.
+ * Checks contract shape, invalid regex patterns, and missing scope for scope_compliant.
  */
 export function validateContract(contract: Contract): void {
   for (const scenario of contract.scenarios) {

@@ -8,6 +8,10 @@ export function registerShow(program: Command): void {
     .description("Display a saved RunResult JSON file")
     .option("--format <format>", "Output format (text or json)", "text")
     .action((resultPath: string, options: { format: string }) => {
+      if (options.format !== "text" && options.format !== "json") {
+        console.error(`Error: --format must be "text" or "json", got "${options.format}"`);
+        process.exit(1);
+      }
       let result: RunResult;
       try {
         const raw = readFileSync(resultPath, "utf-8");

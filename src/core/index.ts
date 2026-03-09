@@ -15,6 +15,6 @@ export type {
   CompleteResult,
 } from "./types.js";
 
-export { evaluateAssertion, validateContract } from "./assertions.js";
+export { evaluateAssertion, validateContract, validateContractShape } from "./assertions.js";
 export type { ScopeJudgeContext } from "./assertions.js";
 export { runContract, runScenario } from "./runner.js";

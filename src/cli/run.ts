@@ -1,8 +1,9 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import yaml from "js-yaml";
 import type { Command } from "commander";
-import type { Contract, RunResult } from "../core/types.js";
+import type { RunResult } from "../core/types.js";
 import { runContract } from "../core/runner.js";
+import { validateContractShape } from "../core/assertions.js";
 import { AnthropicAdapter } from "../adapters/anthropic.js";
 
 export function registerRun(program: Command): void {
@@ -12,13 +13,15 @@ export function registerRun(program: Command): void {
     .option("--output-file <path>", "Save RunResult as JSON")
     .option("--quiet", "Show summary only")
     .action(async (contractPath: string, options: { outputFile?: string; quiet?: boolean }) => {
-      let contract: Contract;
+      let contract;
       try {
         const raw = readFileSync(contractPath, "utf-8");
-        contract = yaml.load(raw) as Contract;
+        const parsed = yaml.load(raw);
+        validateContractShape(parsed);
+        contract = parsed;
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
-        console.error(`Error reading contract file: ${msg}`);
+        console.error(`Error: ${msg}`);
         process.exit(1);
       }
 

@@ -19,6 +19,9 @@ dist/
 Thumbs.db
 *:Zone.Identifier
 
+# Review notes
+.reviews/
+
 # Handoff documents (not part of the published project)
 docs/oss-dev-guidelines.md
 docs/agentcontract-HANDOFF.md
