@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { execFileSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import { writeFileSync, readFileSync, unlinkSync, existsSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
@@ -8,19 +8,15 @@ const CLI = join(import.meta.dirname, "../../dist/cli/index.js");
 const TMP = join(tmpdir(), "agentcontract-test");
 
 function run(args: string[]): { stdout: string; exitCode: number } {
-  try {
-    const stdout = execFileSync("node", [CLI, ...args], {
-      encoding: "utf-8",
-      timeout: 10_000,
-    });
-    return { stdout, exitCode: 0 };
-  } catch (e: unknown) {
-    const err = e as { stdout?: string; stderr?: string; status?: number };
-    return {
-      stdout: (err.stdout ?? "") + (err.stderr ?? ""),
-      exitCode: err.status ?? 1,
-    };
-  }
+  const result = spawnSync("node", [CLI, ...args], {
+    encoding: "utf-8",
+    timeout: 10_000,
+    stdio: "pipe",
+  });
+  return {
+    stdout: (result.stdout ?? "") + (result.stderr ?? ""),
+    exitCode: result.status ?? 1,
+  };
 }
 
 beforeEach(() => {
