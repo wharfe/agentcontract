@@ -9,5 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 - Core type definitions (`Contract`, `Scenario`, `AssertionResult`, `RunResult`, etc.)
-- Project skeleton and build configuration
-- README with Quick Start guide
+- Assertion engine: `contains_pattern`, `not_contains_pattern`, `json_schema`, `scope_compliant`
+- Contract shape validation (`validateContractShape`) for early error detection
+- Anthropic LLM adapter (`AnthropicAdapter`)
+- Contract runner (`runContract`, `runScenario`) with sequential scenario execution
+- `scope_compliant` LLM-as-judge with internal fixed system prompt
+- CLI commands: `init`, `run`, `show`
+- GitHub Actions CI workflow (tsc + eslint + vitest + publint, Node 18/20/22)
+- `docs/llms.txt` for agent discoverability
+- ESLint with typescript-eslint configuration

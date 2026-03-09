@@ -1,0 +1,51 @@
+# agentcontract
+
+Executable spec for AI agent behavior contracts — define expected behavior in YAML and verify compliance.
+
+## CLI Commands
+
+agentcontract init [--name <name>] [--out <path>]
+  Generate a sample contract YAML file.
+
+agentcontract run <contract.yaml> [--output-file <path>] [--quiet]
+  Run all scenarios in a contract file and verify assertions.
+  Exit code 1 if any scenario fails.
+
+agentcontract show <result.json> [--format text|json]
+  Display a saved RunResult JSON file.
+
+## Contract YAML Format
+
+contract: <agent-name>
+version: <semver>
+model:
+  provider: anthropic
+  id: <model-id>
+  system: <system-prompt>
+  temperature: <number>
+  max_tokens: <number>
+judge_model:              # optional, for scope_compliant
+  provider: anthropic
+  id: <model-id>
+scope:                    # optional, for scope_compliant
+  domain: <string>
+  operations: [<string>]
+  resources: [<glob>]
+scenarios:
+  - name: <string>
+    input: <string>
+    skip: <boolean>       # optional
+    assert:
+      - type: contains_pattern
+        pattern: <regex>
+      - type: not_contains_pattern
+        pattern: <regex>
+      - type: scope_compliant
+        scope: ...        # optional override
+      - type: json_schema
+        schema: ...       # JSON Schema object
+
+## Programmatic API
+
+import { runContract, AnthropicAdapter } from "agentcontract";
+import type { Contract, RunResult } from "agentcontract";

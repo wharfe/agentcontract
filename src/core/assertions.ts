@@ -95,7 +95,8 @@ export function validateContract(contract: Contract): void {
         } catch (e) {
           const msg = e instanceof Error ? e.message : String(e);
           throw new Error(
-            `Contract validation error in scenario "${scenario.name}": invalid regex pattern "${spec.pattern}": ${msg}`
+            `Contract validation error in scenario "${scenario.name}": invalid regex pattern "${spec.pattern}": ${msg}`,
+            { cause: e },
           );
         }
       }
