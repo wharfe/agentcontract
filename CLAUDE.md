@@ -5,6 +5,17 @@
 agentcontract is an executable spec tool for AI agent behavior contracts.
 Single-package TypeScript project (not a monorepo).
 
+## Suite Position
+
+This repository is **Layer 1 — Before** in the [Agent Trust Suite](https://github.com/wharfe/agent-trust-suite).
+
+- **Does:** Define agent behavior contracts as YAML specs, then validate agent outputs against them. Supports pattern matching, JSON schema validation, and LLM-as-judge assertions.
+- **Does not:** Runtime monitoring or log collection. It validates outputs after generation, not during execution.
+- **Install:** `npm install -g agentcontract` (v0.1.0, published to npm)
+- **Input:** YAML contract files (`.contract.yaml`)
+- **Output:** `RunResult` JSON with pass/fail status per assertion
+- **Suite navigation:** See [AGENTS.md](https://github.com/wharfe/agent-trust-suite/blob/main/AGENTS.md) for full component map.
+
 ## Architecture
 
 ```
